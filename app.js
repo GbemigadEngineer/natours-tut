@@ -76,7 +76,10 @@ app.use((req, res, next) => {
 // 3) ROUTES
 //  RENDERING WEBPAGES TO THE BROWSER ROUTES
 app.get('/', (req, res) =>{
-  res.status(200).render('base');
+  res.status(200).render('base',{
+    tour: 'The Forest Hicker',
+    user: 'Gbemiga Oduwole',
+  });
 })
 
 // BACKEND API ROUTES
