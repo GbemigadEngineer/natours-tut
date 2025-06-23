@@ -1,6 +1,7 @@
 "use strict";
 
 const Tour = require("../models/tourModel");
+const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 
@@ -24,9 +25,47 @@ exports.getTour = catchAsync(async (req, res) => {
     fields: "review rating user",
   });
 
-//   3) Render template using data from 1)
+  if (!tour) {
+    return next(new AppError("There is no tour with that name.", 404));
+  }
+
+  //   3) Render template using data from 1)
   res.status(200).render("tour", {
-    title: tour.name,
+    title: `${tour.name} Tour`,
     tour,
+  });
+});
+
+// Login
+
+exports.getLoginForm = (req, res, next) => {
+  res.status(200).render("login", {
+    title: "login page",
+  });
+};
+
+// View Account
+exports.getAccount = (req, res) => {
+  res.status(200).render("account", {
+    title: "Your Account",
+  });
+};
+
+// Update User Data
+exports.updateUserData = catchAsync(async (req, res, next) => {
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user.id,
+    {
+      name: req.body.name,
+      email: req.body.email,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  res.status(200).render("account", {
+    title: "Your Account",
+    user: updatedUser,
   });
 });
